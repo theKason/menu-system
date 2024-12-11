@@ -9,6 +9,7 @@ class Cuisine(models.Model):
     # 菜的描述
     desc = models.TextField(blank=True)
     # 菜的图片
+
     # 菜的类别：这里使用 enumeration classes 来定义菜的类别
-    cuisineType = models.TextChoices("Meat","Vegetable","Dessert","Beverage")
+    cuisine_type = models.TextChoices("Meat","Vegetable","Dessert","Beverage")
         
