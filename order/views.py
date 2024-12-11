@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse
-from models import *
+from order import models
 
 # Create your views here.
 class orderIndex(View):
@@ -10,7 +10,7 @@ class orderIndex(View):
         id = request.GET['id']
 
         # 获取当前用户的所有订单记录（QuerySet对象）
-        qs = Order.objects.filter(
+        qs = models.Order.objects.filter(
             customer=id).values(
                 'order_status', 'time_crated', 'cuisine')
 

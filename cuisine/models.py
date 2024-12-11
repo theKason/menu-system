@@ -10,6 +10,16 @@ class Cuisine(models.Model):
     desc = models.TextField(null=True, blank=True)
     # 菜的图片
     avatar = models.ImageField(null=True, blank=True)
-    # 菜的类别：这里使用 enumeration classes 来定义菜的类别
-    cuisine_type = models.TextChoices("Meat","Vegetable","Dessert","Beverage")
+    # 菜的类别
+    category = models.CharField(
+        max_length=20,
+        choices=(
+            ('Meat', 'Meat'),
+            ('Vegetable', 'Vegetable'),
+            ('Dessert', 'Dessert'),
+            ('Beverage', 'Beverage'),
+        ), 
+        default="Meat",
+    )
+
         

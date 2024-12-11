@@ -15,7 +15,7 @@ class Order(models.Model):
 
     # 订单商品: 一个订单可以包含多种商品
     # Order表和Cuisine表的多对多关系通过through参数指定的OrderCuisine表来确定
-    cuisines = models.ManyToToManyField(Cuisine, through="OrderCuisine")
+    cuisines = models.ManyToManyField(Cuisine, through="OrderCuisine")
 
     # 订单用户：一个用户关联多个订单
     # 数据库使用 外键 来表示一对多的关系：如果一个表中 的 某个字段是外键，

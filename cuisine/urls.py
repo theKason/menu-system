@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from cuisine import views
 
 urlpatterns = [
     # 使用类视图时，需要调用 as_view() 方法来将类视图转换为可调用的视图函数

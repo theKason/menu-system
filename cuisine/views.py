@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse
-from models import *
+from cuisine import models
 
 def getCategory(category):
     # 获取当前分类的所有菜品（QuerySet对象）
-    cuisineList = Cuisine.objects.get(cuisine_type=category)
+    cuisineList = models.Cuisine.objects.get(cuisine_type=category)
     return list(cuisineList)
 
 # Create your views here.
