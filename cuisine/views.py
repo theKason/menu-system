@@ -14,9 +14,9 @@ class cuisineIndex(View):
         # 创建空字典存放菜品
         cuisineList = {}
 
-        for c in ["Meat","Vegetable","Dessert","Beverage"]:
-            temp = getCategory(c)
-            cuisineList[c] = temp
+        for sort in ["Meat", "Vegetable", "Dessert", "Beverage"]:
+            sortList = getCategory(sort)
+            cuisineList[sort] = sortList
 
         # 返回Json对象
         return JsonResponse(cuisineList)
