@@ -6,4 +6,4 @@ class User(models.Model):
     name = models.CharField()
 
     # 用户头像（感觉是调用微信api）
-    profile = models.ImageField()
+    avatar = models.ImageField(upload_to='avatars/') #，该路径相对于MEDIA_ROOOT（settings.py）

@@ -10,6 +10,9 @@ class Order(models.Model):
         "2": "已完成",
         }
     
+    # 订单创建时间
+    time_created = models.DateTimeField(auto_now_add=True)
+
     # 订单商品: 一个订单可以包含多种商品
     # Order表和Cuisine表的多对多关系通过through参数指定的OrderCuisine表来确定
     cuisines = models.ManyToToManyField(Cuisine, through="OrderCuisine")
