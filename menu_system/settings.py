@@ -14,6 +14,7 @@ from pathlib import Path
 import pymysql
 import os
 
+# PyMySQL是一个纯Python编写的MySQL数据库连接器
 pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

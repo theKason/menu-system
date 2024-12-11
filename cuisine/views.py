@@ -11,7 +11,7 @@ def getCategory(category):
 # Create your views here.
 class cuisineIndex(View):
     def get(self, request):
-        # 创建空字典存放菜品
+        # 创建空字典存放菜品(按照分类)
         cuisineList = {}
 
         for sort in ["Meat", "Vegetable", "Dessert", "Beverage"]:

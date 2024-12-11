@@ -23,6 +23,9 @@ class Order(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class OrderCuisine(models.Model):
+    '''
+    Order与Cuisine通过这张表实现 多对多 关系
+    '''
     order = models.ForeignKey(Order, on_delete=models.PROTECT)
     cuisine = models.ForeignKey(Cuisine, on_delete=models.PROTECT)
 

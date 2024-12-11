@@ -6,7 +6,13 @@ from django.http import JsonResponse
 # Create your views here.
 class userIndex(View):
     def get(self, reuqest):
+        
         ID = reuqest.GET['id']
-        obj = models.User.objects.get(id=ID)
-
-        return JsonResponse(obj)
+        try:
+            # 根据 URL 的 id参数 获取用户id去数据库查询
+            obj = models.User.objects.get(id=ID)
+            return JsonResponse(obj)
+        except:
+            return JsonResponse({
+                '0': '该用户不存在'
+            })
