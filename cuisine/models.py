@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 class Cuisine(models.Model):
     # 菜的名称
-    name = models.CharField(max_length=20, unique=True)
+    name = models.CharField(max_length=20, unique=True) # CharField 必须要有max_length属性
     # 菜的价格
     price = models.IntegerField()
     # 菜的描述
