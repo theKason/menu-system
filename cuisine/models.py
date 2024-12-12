@@ -22,4 +22,10 @@ class Cuisine(models.Model):
         default="Meat",
     )
 
+    class Meta:
+        # 自定义表名
+        db_table = 'cuisine'
+        # 表别名
+        verbose_name = '菜品表'
+
         

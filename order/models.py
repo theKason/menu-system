@@ -22,6 +22,12 @@ class Order(models.Model):
     # 那就意味着 这个外键字段的记录的取值，只能是它关联表的某个记录的主键的值。
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    class Meta:
+        # 自定义表名
+        db_table = 'order'
+        # 表别名
+        verbose_name = '订单表'
+
 class OrderCuisine(models.Model):
     '''
     Order与Cuisine通过这张表实现 多对多 关系
@@ -31,5 +37,11 @@ class OrderCuisine(models.Model):
 
     # 订单中菜品的数量
     amount = models.PositiveIntegerField()
+
+    class Meta:
+        # 自定义表名
+        db_table = 'ordercuisine'
+        # 表别名
+        verbose_name = '订单菜品关联表'
 
 
