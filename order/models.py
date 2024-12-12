@@ -4,11 +4,8 @@ from user.models import User
 
 # Create your models here.
 class Order(models.Model):
-    # 订单状态: key会存入数据库，value可以通过get_order_status_display()获取
-    order_status = {
-        "1": "未完成",
-        "2": "已完成",
-        }
+    # 订单状态: 
+    order_status = models.CharField(max_length=2)
     
     # 订单创建时间
     time_created = models.DateTimeField(auto_now_add=True)
