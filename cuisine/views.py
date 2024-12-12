@@ -3,24 +3,28 @@ from django.views import View
 from django.http import JsonResponse, HttpResponse
 from cuisine.models import Cuisine
 
-def getCategory(category):
+def getCategory(cur_category):
     # 获取当前分类的所有菜品（QuerySet对象）
-    cuisineList = Cuisine.objects.get(cuisine_type=category)
+    cuisineList = Cuisine.objects.filter(category=cur_category) # 一个分类含有多个菜品对象，必须用filter()方法处理！！！
     return list(cuisineList)
 
 # Create your views here.
 class cuisineIndex(View):
+    '''
+    Django会根据请求方法自动调用类视图的对应函数
+    '''
+
     # 处理 GET 请求（返回所有菜品（按照分类））
     def get(self, request):
         # 创建空字典存放菜品(按照分类)
-        cuisineList = {}
+        cuisineDict = {}
 
         for sort in ["Meat", "Vegetable", "Dessert", "Beverage"]:
             sortList = getCategory(sort)
-            cuisineList[sort] = sortList
+            cuisineDict[sort] = sortList
 
         # 返回Json对象
-        return JsonResponse(cuisineList)
+        return JsonResponse(cuisineDict,safe=False)
     
     # 处理 POST 请求（创建新菜品）   
     def post(self, request):
@@ -66,7 +70,7 @@ class cuisineIndex(View):
 
     # 处理 DELETE 请求（删除菜品）
     def delete(self, request):
-        Cuisine.objects.filter(id=request.PUT.get('cuisine_id')).delete()
+        Cuisine.objects.filter(id=request.DELETE.get('cuisine_id')).delete()
 
 
 

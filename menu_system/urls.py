@@ -16,12 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from cuisine import views
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # 以下都使用了 二级路由
-    path('cuisine/', include('cuisine.urls')),
+    # order, profile使用了 二级路由: 后续路径由应用各自管理
+    path('cuisine/', views.cuisineIndex.as_view()),# 使用类视图时，需要调用 as_view() 方法来将类视图转换为可调用的视图函数
     path('order/', include('order.urls')),
     path('profile/', include('user.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # 想在浏览器通过指定路径访问到图片资源，还需要给图片资源配置一个路由入口。

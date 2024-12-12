@@ -7,6 +7,10 @@ from cuisine.models import Cuisine
 
 # Create your views here.
 class orderIndex(View):
+    '''
+    Django会根据请求方法自动调用类视图的对应函数
+    '''
+    
     def get(self, request): 
         # GET请求 参数在url中，同过request 对象的 GET属性获取
         ID = request.GET['user_id']
@@ -23,10 +27,10 @@ class orderIndex(View):
         except:
             return HttpResponse('user does not own orders')
         
-    def post(self, request):
+    def post(self, request, *args, **kwargs): # 使用 kwargs 来动态接收多余的参数
         # POST请求 参数在request.POST中，同过request.POST.get(<属性名>)获取
-        obj_order_status = '已完成' if request.POST.get(order_status) == 1 else '未完成'
-        obj_customer = request.POST.get(customer_id)
+        obj_order_status = '已完成' if request.POST.get('order_status') == 1 else '未完成'
+        obj_customer = request.POST.get('customer_id')
 
         # 先通过 订单状态 和 用户ID 来创建订单
         order_obj = Order.objects.create(
@@ -47,6 +51,6 @@ class orderIndex(View):
         order_obj.cuisines.add(cuisine_objs)
 
     # 处理 DELETE 请求
-    def delete(self, request):
+    def delete(self, request, *args, **kwargs): # 使用 kwargs 来动态接收多余的参数
         # 通过订单ID来获取订单对象
         Order.objects.filter(request.DELETE.get('order_id')).delete()
