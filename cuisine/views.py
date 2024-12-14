@@ -57,7 +57,7 @@ class cuisineIndex(View):
             obj_avatar = request.PUT.get('avatar')
             obj_category = request.PUT.get('category')
         except:
-            return HttpResponse('所需数据确实')
+            return HttpResponse('所需数据缺失')
         
         # 根据菜品ID获取菜品对象
         Cuisine.objects.filter(id=request.PUT.get('cuisine_id')).cuisine.objects.update(
