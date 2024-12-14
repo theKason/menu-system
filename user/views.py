@@ -8,7 +8,6 @@ class userIndex(View):
     '''
     Django会根据请求方法自动调用类视图的对应函数
     '''
-
     # 处理 GET 请求（获取用户信息）
     def get(self, reuqest):
         ID = reuqest.GET['id']

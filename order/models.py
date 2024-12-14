@@ -5,13 +5,14 @@ from user.models import User
 # Create your models here.
 class Order(models.Model):
     # 订单状态: 
-    order_status = models.CharField(max_length=2)
+    status = models.PositiveIntegerField()
     
     # 订单创建时间
     time_created = models.DateTimeField(auto_now_add=True)
 
     # 订单商品: 一个订单可以包含多种商品
     # Order表和Cuisine表的多对多关系通过through参数指定的OrderCuisine表来确定
+    # 后续获取cuisines属性得到的也是 QuerySet对象
     cuisines = models.ManyToManyField(Cuisine, through="OrderCuisine")
 
     # 订单用户：一个用户关联多个订单

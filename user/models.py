@@ -6,7 +6,7 @@ class User(models.Model):
     name = models.CharField(max_length=30)
 
     # 用户头像（感觉是调用微信api）
-    avatar = models.ImageField(upload_to='avatars/') #，该路径相对于MEDIA_ROOOT（settings.py）
+    avatar = models.ImageField(upload_to='avatars/') # 该路径相对于MEDIA_ROOT(settings.py）
 
     class Meta:
         # 自定义表名
