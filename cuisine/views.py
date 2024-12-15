@@ -157,14 +157,14 @@ class cuisineIndex(View):
         '''
         请求数据结构（参数放在请求体）:
         {
-            "id": int
+            "id": [int, int, int]
         }
         '''
 
         # 通过解析reuqest.body来获取菜品id
-        cuisine_id = json.loads(request.body)['id']
+        cuisine_id_list = json.loads(request.body)['id']
         try:
-            Cuisine.objects.filter(id=cuisine_id).delete()
+            Cuisine.objects.filter(id__in=cuisine_id_list).delete()
         except Exception as e:
             print(f"Error: {e}")
             return HttpResponse('菜品删除失败')
