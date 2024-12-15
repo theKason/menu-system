@@ -52,14 +52,22 @@ class cuisineIndex(View):
         '''
         
         # 创建空字典存放菜品(按照分类)
-        cuisineDict = {}
+        cuisineList = {}
 
-        for sort in ["Meat", "Vegetable", "Dessert", "Beverage"]:
-            sortList = getCategory(sort)
-            cuisineDict[sort] = sortList
-
-        # 返回Json对象
-        return JsonResponse(cuisineDict, safe=False)
+        try:
+            cuisine_name = request.GET.get("name")
+            if cuisine_name == None:
+                raise ValueError # 任意异常
+        except: # 不是搜索请求
+            for sort in ["Meat", "Vegetable", "Dessert", "Beverage"]:
+                sortList = getCategory(sort)
+                cuisineList[sort] = sortList
+            # 返回Json对象
+            return JsonResponse(cuisineList, safe=False)
+        else: # 搜索请求
+            cuisineList = Cuisine.objects.filter(name__icontains=cuisine_name) # 模糊匹配
+            cuisineList = cuisineList.values("name", "avatar")
+            return JsonResponse(list(cuisineList), safe=False)
     
     # 处理 POST 请求（创建新菜品）   
     def post(self, request, *args, **kwargs):
