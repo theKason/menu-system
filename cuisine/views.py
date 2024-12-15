@@ -29,12 +29,29 @@ class cuisineIndex(View):
     '''
     # 处理 GET 请求（返回所有菜品（按照分类））
     def get(self, request):
+        '''
+        返回数据结构:
+        {
+            "Meat":[
+                {
+                    "id": 1,
+                    "name": str,
+                    "desc": str,
+                    "avatar": "/media/%E5%B0%8F%E7%82%92%E9%BB%84%E7%89%9B%E8%82%89.jpeg"
+                },
+                {
+                    "id": 2,
+                    "name": str,
+                    "desc": str,
+                    "avatar": "/media/%E9%BA%BB%E5%A9%86%E8%B1%86%E8%85%90.jpeg"
+                },
+            ], 
+            "Vegetable":[...], 
+            ...
+        }
+        '''
+        
         # 创建空字典存放菜品(按照分类)
-        # 数据结构：{
-        #           "Meat":[...], 
-        #           "Vegetable":[...], 
-        #           ...
-        #          }
         cuisineDict = {}
 
         for sort in ["Meat", "Vegetable", "Dessert", "Beverage"]:
@@ -46,6 +63,17 @@ class cuisineIndex(View):
     
     # 处理 POST 请求（创建新菜品）   
     def post(self, request, *args, **kwargs):
+        '''
+        请求数据结构（参数放在表单）:
+        {
+            "name": str,
+            "price": int,
+            "desc": str,
+            "avatar": url(str),
+            "category": str
+        }
+        '''
+        
         # 获取所有菜品属性
         obj_name = request.POST.get('name')
         obj_price = request.POST.get('price')
@@ -61,7 +89,8 @@ class cuisineIndex(View):
                 avatar = obj_avatar,
                 category = obj_category
             )
-        except:
+        except Exception as e:
+            print(f"Error: {e}")
             return HttpResponse('所需数据缺少')
         else:
             cuisine_obj.save()
@@ -76,40 +105,60 @@ class cuisineIndex(View):
         要处理 PUT 请求数据，需要使用 request.body 来获取原始请求数据，然后手动解析它。
         常见的做法是使用 json.loads 解析 JSON 数据，或者使用 django.http.QueryDict 来处理表单数据。
 
-        接收数据格式（例子）：
+        请求数据结构（参数放在请求体）:
         {
-        "id": 19,
-        "name": null,
-        "price": 25,
-        "desc":null,
-        "avatar": null,
-        "category": null 
+            "id": int,
+            "name": str,
+            "price": int,
+            "desc": str,
+            "avatar": url(str),
+            "category": str
+        }
+
+        返回数据结构:
+        {
+            "id": 19,
+            "name": null,
+            "price": 25,
+            "desc":null,
+            "avatar": null,
+            "category": null 
         }
         '''
 
         params_data = json.loads(request.body.decode('utf-8'))
         
-        # 根据菜品ID获取菜品对象
         try:
+            # 根据菜品ID获取菜品对象
             to_update_cuisine = Cuisine.objects.get(id=params_data['id'])
             # 忽略不需要更改的参数
             for param, value in params_data.items(): # 同时获取字典的键和值，可以使用 .items() 方法。这将返回每一对键值元组
                 if param == 'id' or value == None:
                     continue
-                to_update_cuisine.__dict__[param] = value # __dict__ 是 Python 中所有对象都有的一个字典，它包含了对象的所有实例属性
+                to_update_cuisine.__dict__[param] = value # __dict__ 是所有 Django model 对象都有的一个字典，包含了对象的所有实例属性
                 to_update_cuisine.save()
-        except:
+
+        except Exception as e:
+            print(f"Error: {e}")
             return HttpResponse('所需数据缺少')
         else:
             return HttpResponse('菜品更改完成')
 
     # 处理 DELETE 请求（删除菜品）
     def delete(self, request):
+        '''
+        请求数据结构（参数放在请求体）:
+        {
+            "id": int
+        }
+        '''
+
         # 通过解析reuqest.body来获取菜品id
         cuisine_id = json.loads(request.body)['id']
         try:
             Cuisine.objects.filter(id=cuisine_id).delete()
-        except:
+        except Exception as e:
+            print(f"Error: {e}")
             return HttpResponse('菜品删除失败')
         else:
             return HttpResponse('菜品删除成功')

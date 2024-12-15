@@ -25,7 +25,7 @@ class Cuisine(models.Model):
     class Meta:
         # 自定义表名
         db_table = 'cuisine'
-        # 表别名
+        # 表别名(Django Admin)
         verbose_name = '菜品表'
 
         

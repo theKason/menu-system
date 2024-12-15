@@ -13,7 +13,31 @@ class orderIndex(View):
     '''
     def get(self, request): 
         '''
-        返回数据结构：。。。
+        请求数据结构（参数放在url）:
+        {"user_id": int}
+
+        返回数据结构:
+        [
+            {
+                "id": 24,
+                "time_created": "2024-12-14T11:28:52.490Z",
+                "cuisines": [
+                    {
+                        "name": "小炒黄牛肉",
+                        "avatar": "/media/%E5%B0%8F%E7%82%92%E9%BB%84%E7%89%9B%E8%82%89.jpeg"
+                    },
+                    {
+                        "name": "麻婆豆腐",
+                        "avatar": "/media/%E9%BA%BB%E5%A9%86%E8%B1%86%E8%85%90.jpeg"
+                    },
+                    {
+                        "name": "上汤豆苗",
+                        "avatar": "/media/%E4%B8%8A%E6%B1%A4%E8%B1%86%E8%8B%97.jpeg"
+                    }
+                ]
+            },
+            ...
+        ]
         '''
         try:
             # 获取当前用户的所有订单记录（一次性返回所有数据，不做二次查询）
@@ -49,7 +73,7 @@ class orderIndex(View):
         
     def post(self, request):
         '''
-        请求数据结构：
+        请求数据结构（参数放在请求体）：
         {
             "status": "已完成",
             "user_id": 1,
@@ -96,7 +120,7 @@ class orderIndex(View):
     # 处理 DELETE 请求
     def delete(self, request): # 使用 kwargs 来动态接收多余的参数
         '''
-        请求数据结构:
+        请求数据结构（参数放在请求体）:
         {
             "order_id": int
         }
