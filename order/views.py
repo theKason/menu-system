@@ -36,28 +36,33 @@ class orderIndex(View):
                     }
                 ]
             },
-            ...
+            {
+                "id": 25,
+                ...
+            }
         ]
         '''
         try:
             # 获取当前用户的所有订单记录（一次性返回所有数据，不做二次查询）
             # ---外键表反向访问
+
             # 1.先获取当前用户
             user_id = request.GET.get('user_id') # 查询字符串参数
             user = User.objects.get(id=user_id)
+
             # 2.通过用户反向访问订单（QuerySet对象）
-            orders = user.order_set.all()
+            orders = user.order_set.all() # 这里可以直接使用 user.order_set.all().values('name','avatar')来获取目标参数
+
             # 3.构建返回数据形式（需要的参数：status、time_created，cuisines）
             orders_list = []
-            # 3.1构建每个订单
-            for order in orders:
+            for order in orders: # 3.1构建每个订单
                 temp_order_dict = {}
                 temp_order_dict['id'] = order.id
                 temp_order_dict['time_created'] = order.time_created
-                #3.2构建每个订单的菜品
+                
                 cuisine_list = []
                 cuisines = order.cuisines.all()# QuerySet对象
-                for cuisine in cuisines:
+                for cuisine in cuisines: # 3.2构建每个订单的菜品
                     temp_cuisine_dict = {}
                     temp_cuisine_dict['name'] = cuisine.name
                     temp_cuisine_dict['avatar'] = cuisine.avatar.url
@@ -70,6 +75,7 @@ class orderIndex(View):
         except Exception as e:
             print(f"Error: {e}")
             return HttpResponse('user does not own orders')
+        
         
     def post(self, request):
         '''
@@ -116,6 +122,7 @@ class orderIndex(View):
             return HttpResponse('订单创建失败')
         else:
             return HttpResponse('订单创建成功')
+            
 
     # 处理 DELETE 请求
     def delete(self, request): # 使用 kwargs 来动态接收多余的参数
@@ -127,7 +134,7 @@ class orderIndex(View):
         '''
         try:
             # 通过订单ID来获取订单对象
-            user_id = json.loads(request.body).get('user_id')
+            user_id = json.loads(request.body).get('order_id')
             Order.objects.filter(id=user_id).delete()
         except Exception as e:
             print(f"Error: {e}")
