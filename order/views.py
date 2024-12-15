@@ -26,14 +26,7 @@ class orderIndex(View):
                         "name": "小炒黄牛肉",
                         "avatar": "/media/%E5%B0%8F%E7%82%92%E9%BB%84%E7%89%9B%E8%82%89.jpeg"
                     },
-                    {
-                        "name": "麻婆豆腐",
-                        "avatar": "/media/%E9%BA%BB%E5%A9%86%E8%B1%86%E8%85%90.jpeg"
-                    },
-                    {
-                        "name": "上汤豆苗",
-                        "avatar": "/media/%E4%B8%8A%E6%B1%A4%E8%B1%86%E8%8B%97.jpeg"
-                    }
+                    ...
                 ]
             },
             {
@@ -74,7 +67,7 @@ class orderIndex(View):
             return JsonResponse(orders_list, safe=False)
         except Exception as e:
             print(f"Error: {e}")
-            return HttpResponse('user does not own orders')
+            return HttpResponse('用户未创建任何订单')
         
         
     def post(self, request):
