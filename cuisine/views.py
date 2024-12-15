@@ -15,7 +15,7 @@ def getCategory(cur_category):
             'id': cuisine_obj.id,
             'name': cuisine_obj.name,
             'desc': cuisine_obj.desc,
-            'avatar': cuisine_obj.avatar.url, # 当序列化时，可以使用 image.url 获取图片的 URL
+            'avatar': cuisine_obj.avatar.url, # 用 image.url 获取图片的 URL 文本
         }
 
         serialCuisineList.append(data)
@@ -70,7 +70,7 @@ class cuisineIndex(View):
             return JsonResponse(list(cuisineList), safe=False)
     
     # 处理 POST 请求（创建新菜品）   
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         '''
         请求数据结构（参数放在表单）:
         {
