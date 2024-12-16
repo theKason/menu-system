@@ -14,8 +14,5 @@ class OrderAdmin(admin.ModelAdmin):
         return ", ".join([cuisine.name for cuisine in obj.cuisines.all()])
     get_cuisines.short_description = '菜品'
 
-class OrderCuisineAdmin(admin.ModelAdmin):
-    list_display = ('order', 'cuisine', 'amount')
-
 admin.site.register(Order, OrderAdmin)
-admin.site.register(OrderCuisine, OrderCuisineAdmin)
+
