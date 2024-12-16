@@ -1,13 +1,21 @@
 from django.contrib import admin
-from order.models import Order, OrderCuisine
+from .models import Order, OrderCuisine, Cuisine
 
-def get_cuisine(obj):
-    return OrderCuisine.objects.filter(order=obj.id)
+class OrderCuisineInline(admin.TabularInline):
+    model = OrderCuisine
+    extra = 1  # 默认显示一个空的关联行，可以增加/删除的数量
 
-# Register your models here.
-@admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    # 要展示的内容
-        list_display = ['status','time_created',get_cuisine,'customer']
+    list_display = ('id', 'status', 'time_created', 'customer', 'get_cuisines')
+    inlines = [OrderCuisineInline]  # 让订单与菜品的关系可以在订单的详情页进行编辑
 
-get_cuisine.short_description = 'Cuisine' # 设置列标题
+    def get_cuisines(self, obj):
+        # 返回与订单相关联的菜品名，用逗号分隔
+        return ", ".join([cuisine.name for cuisine in obj.cuisines.all()])
+    get_cuisines.short_description = '菜品'
+
+class OrderCuisineAdmin(admin.ModelAdmin):
+    list_display = ('order', 'cuisine', 'amount')
+
+admin.site.register(Order, OrderAdmin)
+admin.site.register(OrderCuisine, OrderCuisineAdmin)

@@ -1,12 +1,25 @@
 from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse, HttpResponse
-from cuisine.models import Cuisine
+from cuisine.models import Cuisine, Category
+from order.models import OrderCuisine
 import json
 
+def getSaleNum(cuisine_obj):
+    cuisineQuerySet = OrderCuisine.objects.filter(cuisine=cuisine_obj) # QuerySet对象
+    num = 0 # 初始化销量总数
+    for cuisine in  cuisineQuerySet:
+        num += cuisine.amount
+    return num
+
+
 def getCategory(cur_category):
+    # 获取分类实例对象
+    category = Category.objects.get(name=cur_category)
+    # 获取当前分类的ID
+    ID = category.id
     # 获取当前分类的所有菜品（QuerySet对象）
-    cuisineList = Cuisine.objects.filter(category=cur_category) # 一个分类含有多个菜品对象，必须用filter()方法处理！！！
+    cuisineList = category.cuisine_set.all()
     # 将对象所有属性序列化
     serialCuisineList = []
     for cuisine_obj in cuisineList:
@@ -14,13 +27,21 @@ def getCategory(cur_category):
         data = {
             'id': cuisine_obj.id,
             'name': cuisine_obj.name,
+            'price': cuisine_obj.price,
+            'sales': getSaleNum(cuisine_obj),
             'desc': cuisine_obj.desc,
             'avatar': cuisine_obj.avatar.url, # 用 image.url 获取图片的 URL 文本
         }
 
         serialCuisineList.append(data)
 
-    return serialCuisineList
+    categoryDict = {
+        'id': ID,
+        'name': cur_category,
+        'dishes': serialCuisineList
+        }
+
+    return categoryDict
 
 # Create your views here.
 class cuisineIndex(View):
@@ -31,8 +52,10 @@ class cuisineIndex(View):
     def get(self, request):
         '''
         返回数据结构:
-        {
-            "Meat":[
+        [
+            {id: int,
+            name: "肉"，
+            dishes: [
                 {
                     "id": 1,
                     "name": str,
@@ -45,28 +68,27 @@ class cuisineIndex(View):
                     "desc": str,
                     "avatar": "/media/%E9%BA%BB%E5%A9%86%E8%B1%86%E8%85%90.jpeg"
                 },
-            ], 
-            "Vegetable":[...], 
+            ]},
             ...
-        }
+        ]
         '''
         
-        # 创建空字典存放菜品(按照分类)
-        cuisineList = {}
+        # 创建空列表存放菜品(按照分类)
+        cuisineList = []
 
         try:
-            cuisine_name = request.GET.get("name")
+            cuisine_name = request.GET.get("cuisine_name")
             if cuisine_name == None:
                 raise ValueError # 任意异常
         except: # 不是搜索请求
-            for sort in ["Meat", "Vegetable", "Dessert", "Beverage"]:
-                sortList = getCategory(sort)
-                cuisineList[sort] = sortList
+            for sort in ["肉", "菜", "甜品", "饮料"]: # 菜品分类写死，后续有更改这个列表需要同步更新！！！
+                sortDict = getCategory(sort)
+                cuisineList.append(sortDict)
             # 返回Json对象
             return JsonResponse(cuisineList, safe=False)
         else: # 搜索请求
             cuisineList = Cuisine.objects.filter(name__icontains=cuisine_name) # 模糊匹配
-            cuisineList = cuisineList.values("name", "avatar")
+            cuisineList = cuisineList.values("id", "name", "avatar")
             return JsonResponse(list(cuisineList), safe=False)
     
     # 处理 POST 请求（创建新菜品）   
