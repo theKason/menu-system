@@ -26,7 +26,6 @@ class Cuisine(models.Model):
     avatar = models.ImageField(null=True, blank=True) # 这里没有设置upload_to,Django 会将它存储在默认的文件上传目录中(settings.MEDIA_ROOT)
     # 菜的类别
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
     class Meta:
         # 自定义表名
         db_table = 'cuisine'
