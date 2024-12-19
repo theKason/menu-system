@@ -52,6 +52,7 @@ class orderIndex(View):
                 temp_order_dict = {}
                 temp_order_dict['id'] = order.id
                 temp_order_dict['time_created'] = order.time_created
+                temp_order_dict['status'] = order.status
                 
                 cuisine_list = []
                 cuisines = order.cuisines.all()# QuerySet对象
