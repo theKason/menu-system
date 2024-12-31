@@ -8,12 +8,14 @@ from django.http import JsonResponse
 
 SECRET_KEY = 'weapp_created_by_wesley_and_kason'
 
-def generate_token(user_id):
+def generate_token(user_openid, user_session_key):
     '''
     生成JWT Token
     '''
+    # 自定义登陆态
     payload = {
-        'user_id': user_id,
+        'user_openid': user_openid,
+        'user_session_key': user_session_key,
         'exp': datetime.datetime.now() + datetime.timedelta(days=7),  # 7天过期
         'iat': datetime.datetime.now()
     }
@@ -38,13 +40,14 @@ def wechat_login(request):
         session_key = data['session_key']
 
         # 查找或创建用户
-        user, created = WeappUser.objects.get_or_create(openid=openid)
+        # Returns a tuple of (object, created), where object is the retrieved or created object and created is a boolean specifying whether a new object was created.
+        user, created = WeappUser.objects.get_or_create(openid=openid,session_key=session_key)
 
         # 生成 Token
-        token = generate_token(user.id)
+        token = generate_token(user.openid)
 
         # 返回 Token 给前端
-        return JsonResponse({'token': token, 'user_id': user.id})
+        return JsonResponse({'token': token, 'user_openid': user.openid})
 
     return JsonResponse({'error': 'Login failed'}, status=400)
 
@@ -62,7 +65,7 @@ def authenticate_token(get_response):
         token = auth_header.split(' ')[1]
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-            request.user_id = payload['user_id']
+            request.user_session_key = payload['user_session_key']
         except jwt.ExpiredSignatureError:
             return JsonResponse({'error': 'Token has expired'}, status=401)
         except jwt.InvalidTokenError:
@@ -72,14 +75,14 @@ def authenticate_token(get_response):
     return middleware
 
 # 刷新 Token 接口（参考代码）
-# def refresh_token(request):
-#     """
-#     刷新 Token
-#     """
-#     old_token = request.headers.get('Authorization').split(' ')[1]
-#     try:
-#         payload = jwt.decode(old_token, SECRET_KEY, algorithms=['HS256'], options={'verify_exp': False})
-#         new_token = generate_token(payload['user_id'])
-#         return JsonResponse({'token': new_token})
-#     except jwt.InvalidTokenError:
-#         return JsonResponse({'error': 'Invalid Token'}, status=401)
+def refresh_token(request):
+    """
+    刷新 Token
+    """
+    old_token = request.headers.get('Authorization').split(' ')[1]
+    try:
+        payload = jwt.decode(old_token, SECRET_KEY, algorithms=['HS256'], options={'verify_exp': False})
+        new_token = generate_token(payload['user_openid'])
+        return JsonResponse({'token': new_token})
+    except jwt.InvalidTokenError:
+        return JsonResponse({'error': 'Invalid Token'}, status=401)
