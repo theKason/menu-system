@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse, HttpResponse
 from order.models import Order, OrderCuisine 
-from user.models import User
+from user.models import WeappUser
 from cuisine.models import Cuisine
 import json
 
@@ -41,10 +41,10 @@ class orderIndex(View):
 
             # 1.先获取当前用户
             user_id = request.GET.get('user_id') # 查询字符串参数
-            user = User.objects.get(id=user_id)
+            user = WeappUser.objects.get(id=user_id)
 
             # 2.通过用户反向访问订单（QuerySet对象）
-            orders = user.order_set.all() # 这里可以直接使用 user.order_set.all().values('name','avatar')来获取目标参数
+            orders = user.order_set.all() # 这里可以直接使用 user.order_set.all().values('name','avatar')获取特定参数
 
             # 3.构建返回数据形式（需要的参数：status、time_created，cuisines）
             orders_list = []
@@ -109,8 +109,8 @@ class orderIndex(View):
                     amount=cuisine_amount
                     )
 
-            # order_obj.save()
-            # 使用 Model.objects.method() 时不需要显式调用 .save()
+            # 这里不需要 order_obj.save()
+            # 因为使用 Model.objects.method() 时不需要显式调用 .save()
         except Exception as e:
             print(f"Error: {e}")
             return HttpResponse('订单创建失败')

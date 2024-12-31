@@ -23,7 +23,7 @@ class Cuisine(models.Model):
     # 菜的描述
     desc = models.TextField(null=True, blank=True)
     # 菜的图片
-    avatar = models.ImageField(null=True, blank=True, default="default-avatar.jpeg") # 这里没有设置upload_to,Django 会将它存储在默认的文件上传目录中(settings.MEDIA_ROOT)
+    avatar = models.ImageField(null=True, blank=True, default="default-avatar.jpeg") # 这里没有设置upload_to,Django会将它存储在默认的文件上传目录中(settings.MEDIA_ROOT)
     # 菜的类别
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     class Meta:

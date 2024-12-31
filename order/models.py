@@ -1,6 +1,6 @@
 from django.db import models
 from cuisine.models import Cuisine
-from user.models import User
+from user.models import WeappUser
 
 # Create your models here.
 class Order(models.Model):
@@ -18,7 +18,7 @@ class Order(models.Model):
     # 订单用户：一个用户关联多个订单
     # 数据库使用 外键 来表示一对多的关系：如果一个表中 的 某个字段是外键，
     # 那就意味着 这个外键字段的记录的取值，只能是它关联表的某个记录的主键的值。
-    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    customer = models.ForeignKey(WeappUser, on_delete=models.CASCADE)
 
     class Meta:
         # 自定义表名
@@ -30,8 +30,8 @@ class OrderCuisine(models.Model):
     '''
     Order与Cuisine通过这张表实现 多对多 关系
     '''
-    order = models.ForeignKey(Order, on_delete=models.PROTECT)
-    cuisine = models.ForeignKey(Cuisine, on_delete=models.PROTECT)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    cuisine = models.ForeignKey(Cuisine, on_delete=models.CASCADE)
 
     # 订单中菜品的数量
     amount = models.PositiveIntegerField()

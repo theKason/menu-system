@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-from user.models import User
+from user.models import WeappUser
 from django.http import JsonResponse, HttpResponse
 import json
 
@@ -25,7 +25,7 @@ class userIndex(View):
         try:
             # 根据 URL 的 id参数 获取用户id去数据库查询
             ID = reuqest.GET.get('id')
-            obj = User.objects.get(id=ID)
+            obj = WeappUser.objects.get(id=ID)
             return JsonResponse({"name": obj.name, "avatar": obj.avatar.url})
         except Exception as e:
             print(f'Error: {e}')
@@ -46,7 +46,7 @@ class userIndex(View):
             user_name = user_data.get('user_name')
             user_avatar = user_data.get('user_avatar')
 
-            User.objects.create(
+            WeappUser.objects.create(
                 name=user_name, 
                 avatar=user_avatar)# 新增数据
         except Exception as e:
@@ -72,7 +72,7 @@ class userIndex(View):
             # 参数必须要有 id
             user_id = user_data['id']
             # 查看用户是否存在
-            user_obj = User.objects.get(id=user_id)
+            user_obj = WeappUser.objects.get(id=user_id)
             # 忽略不存在的参数
             for param, value in user_data.items():
                 if param == 'id':
@@ -94,7 +94,7 @@ class userIndex(View):
         '''
         try:
             user_id = json.loads(request.body).get('id')
-            User.objects.filter(id=user_id).delete()
+            WeappUser.objects.filter(id=user_id).delete()
             return HttpResponse('用户删除成功')
         except Exception as e:
             print(f'Error: {e}')

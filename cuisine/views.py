@@ -7,10 +7,8 @@ import json
 
 def getSaleNum(cuisine_obj):
    cuisineQuerySet = OrderCuisine.objects.filter(cuisine=cuisine_obj)
-   num = 0
-   for cuisine in cuisineQuerySet:
-       num += cuisine.amount
-   return num
+   cuisineQuerySet = list(cuisineQuerySet)
+   return len(cuisineQuerySet) # 直接对原生QuerySet使用len()会触发数据库查询
 
 def getCategory(cur_category):
    try:
