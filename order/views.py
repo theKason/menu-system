@@ -40,8 +40,8 @@ class orderIndex(View):
             # ---外键表反向访问
 
             # 1.先获取当前用户
-            user_id = request.GET.get('user_id') # 查询字符串参数
-            user = WeappUser.objects.get(id=user_id)
+            user_openid = request.GET.get('user_openid') # 查询字符串参数
+            user = WeappUser.objects.get(openid=user_openid)
 
             # 2.通过用户反向访问订单（QuerySet对象）
             orders = user.order_set.all() # 这里可以直接使用 user.order_set.all().values('name','avatar')获取特定参数

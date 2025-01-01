@@ -1,12 +1,15 @@
 from pathlib import Path
 import pymysql
 import os
+import sys
+
 
 # PyMySQL配置
 pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))  # 确保项目根目录被加入系统路径
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-q+zg9kqr=f5j)+dm!zfrvqfjjvf#7-yn%ayc4v)=t#r^=qc(6e'
@@ -45,14 +48,12 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'menu_system.user.auth.authenticate_token',
+    'user.auth.authenticate_token',
     # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-AUTHENTICATION_BACKENDS = ['menu_system.user.OpenidBackend']
 
 ROOT_URLCONF = 'menu_system.urls'
 
@@ -125,3 +126,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Django allows you to override the default user model by providing 
 # a value for the AUTH_USER_MODEL setting that references a custom model
 AUTH_USER_MODEL = 'user.WeappUser'
+

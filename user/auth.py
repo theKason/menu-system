@@ -5,7 +5,6 @@ from .models import WeappUser
 from django.http import JsonResponse
 
 # 定义密钥（生成token）
-
 SECRET_KEY = 'weapp_created_by_wesley_and_kason'
 
 def generate_token(user_openid, user_session_key):
@@ -22,6 +21,7 @@ def generate_token(user_openid, user_session_key):
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')# jwt库生成Token
     return token
 
+
 def wechat_login(request):
     '''
     用户登陆并返回Token
@@ -30,7 +30,7 @@ def wechat_login(request):
 
     # 通过微信接口获取 openid 和 session_key
     app_id = "wxfd972ebc3f581169"
-    app_secret = "your_app_secret"
+    app_secret = "3fc20affcaaee6ef21892cc0884816bf"
     url = f"https://api.weixin.qq.com/sns/jscode2session?appid={app_id}&secret={app_secret}&js_code={code}&grant_type=authorization_code"
     response = requests.get(url)
     data = response.json()
@@ -57,6 +57,12 @@ def authenticate_token(get_response):
     中间件：验证 Token
     """
     def middleware(request):
+        # 检查 URL，如果是指定的路径则跳过中间件逻辑
+        excluded_paths = ['/profile/login/', '/cuisine/']  # 不需要执行的路径
+        if request.path in excluded_paths:
+            return get_response(request)
+
+        # 正常验证逻辑
         auth_header = request.headers.get('Authorization')
         # 请求不符合规范
         if not auth_header or not auth_header.startswith('Bearer '):
@@ -65,7 +71,7 @@ def authenticate_token(get_response):
         token = auth_header.split(' ')[1]
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-            request.user_session_key = payload['user_session_key']
+            request.user_openid = payload['user_openid']
         except jwt.ExpiredSignatureError:
             return JsonResponse({'error': 'Token has expired'}, status=401)
         except jwt.InvalidTokenError:
@@ -73,6 +79,7 @@ def authenticate_token(get_response):
 
         return get_response(request)
     return middleware
+
 
 # 刷新 Token 接口（参考代码）
 def refresh_token(request):
