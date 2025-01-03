@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse, HttpResponse
 from cuisine.models import Cuisine, Category
@@ -6,7 +5,7 @@ from order.models import OrderCuisine
 import json
 
 def getSaleNum(cuisine_obj):
-   cuisineQuerySet = OrderCuisine.objects.filter(cuisine=cuisine_obj)
+   cuisineQuerySet = OrderCuisine.objects.filter(cuisine=cuisine_obj) 
    cuisineQuerySet = list(cuisineQuerySet)
    return len(cuisineQuerySet) # 直接对原生QuerySet使用len()会触发数据库查询
 
@@ -45,7 +44,6 @@ class cuisineIndex(View):
    def get(self, request):
        # 创建空列表存放菜品(按照分类)
        cuisineList = []
-
        try:
            cuisine_name = request.GET.get("cuisine_name")
            if cuisine_name == None:

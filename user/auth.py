@@ -29,19 +29,23 @@ def wechat_login(request):
     code = request.POST.get('code')
 
     # 通过微信接口获取 openid 和 session_key
-    app_id = "wxfd972ebc3f581169"
-    app_secret = "3fc20affcaaee6ef21892cc0884816bf"
+    app_id = "xxxxx"
+    app_secret = "xxxxx"
     url = f"https://api.weixin.qq.com/sns/jscode2session?appid={app_id}&secret={app_secret}&js_code={code}&grant_type=authorization_code"
     response = requests.get(url)
     data = response.json()
 
     if 'openid' in data:
         openid = data['openid']
-        session_key = data['session_key']
+        name = data['name']
+        avatar = data['avatar']
 
         # 查找或创建用户
         # Returns a tuple of (object, created), where object is the retrieved or created object and created is a boolean specifying whether a new object was created.
-        user, created = WeappUser.objects.get_or_create(openid=openid,session_key=session_key)
+        user, created = WeappUser.objects.get_or_create(
+            openid=openid,
+            name=name,
+            avatar=avatar)
 
         # 生成 Token
         token = generate_token(user.openid)

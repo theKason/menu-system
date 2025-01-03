@@ -2,6 +2,9 @@ from django.db import models
 
 # Create your models here.
 class Category(models.Model):
+    '''
+    菜的分类模型
+    '''
     # 分类名称
     name = models.CharField(max_length=10, unique=True)
 
@@ -16,6 +19,9 @@ class Category(models.Model):
 
 
 class Cuisine(models.Model):
+    '''
+    菜品模型
+    '''
     # 菜的名称
     name = models.CharField(max_length=20, unique=True) # CharField 必须要有max_length属性
     # 菜的价格
@@ -23,7 +29,10 @@ class Cuisine(models.Model):
     # 菜的描述
     desc = models.TextField(null=True, blank=True)
     # 菜的图片
-    avatar = models.ImageField(null=True, blank=True, default="default-avatar.jpeg") # 这里没有设置upload_to,Django会将它存储在默认的文件上传目录中(settings.MEDIA_ROOT)
+    avatar = models.ImageField(
+        null=True, blank=True, 
+        # 默认菜品图片
+        default="default-avatar.jpeg") # 没有设置upload_to,Django会将它存储在默认的文件上传目录中(settings.MEDIA_ROOT)
     # 菜的类别
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     class Meta:
