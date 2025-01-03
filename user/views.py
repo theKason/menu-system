@@ -62,7 +62,7 @@ class userIndex(View):
         '''
         请求数据结构（参数放在请求体，name&avatar可以有可无）:
         {
-            "id": int,
+            "openid": str,
             "name": str,
             "avatar: url(str)
         }
@@ -70,17 +70,17 @@ class userIndex(View):
 
         try:
             user_data = json.loads(request.body)
-            user_id = user_data['id']# 参数必须要有 id
-            user_obj = WeappUser.objects.get(id=user_id)# 查看用户是否存在
+            user_openid = user_data['openid']# 参数必须要有 id
+            user_obj = WeappUser.objects.get(openid=user_openid)# 查看用户是否存在
             for param, value in user_data.items():
-                if param == 'id':# 忽略不存在的用户
+                if param == 'openid':# 无法修改用户openid
                     continue
                 user_obj.__dict__[param] = value
                 user_obj.save()
-            return HttpResponse('用户信息更改成功')
+            return JsonResponse({'msg': '用户信息更改成功'})
         except Exception as e:
             print(f'Error: {e}')
-            return HttpResponse('修改用户信息失败')
+            return JsonResponse({'msg': '修改用户信息失败'})
 
     # 处理 DELETE 请求（删除用户）
     def delete(self, request):
@@ -91,9 +91,9 @@ class userIndex(View):
         }
         '''
         try:
-            user_id = json.loads(request.body).get('openid')
-            WeappUser.objects.filter(openid=user_id).delete()
-            return HttpResponse('用户删除成功')
+            user_openid = json.loads(request.body).get('openid')
+            WeappUser.objects.filter(openid=user_openid).delete()
+            return JsonResponse({'msg':'用户删除成功'})
         except Exception as e:
             print(f'Error: {e}')
-            return HttpResponse('删除用户失败')
+            return JsonResponse({'msg':'删除用户失败'})

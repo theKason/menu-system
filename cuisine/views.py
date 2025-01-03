@@ -1,5 +1,5 @@
 from django.views import View
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from cuisine.models import Cuisine, Category
 from order.models import OrderCuisine
 import json
@@ -21,7 +21,7 @@ def getCategory(cur_category):
        serialCuisineList = []
        for cuisine_obj in cuisineList:
            data = {
-               'id': cuisine_obj.id,
+               'cuisine_id': cuisine_obj.id,
                'name': cuisine_obj.name,
                'price': cuisine_obj.price,
                'sales': getSaleNum(cuisine_obj),
@@ -31,7 +31,7 @@ def getCategory(cur_category):
            serialCuisineList.append(data)
 
        categoryDict = {
-           'id': ID,  
+           'category_id': ID,  
            'name': cur_category,
            'dishes': serialCuisineList
        }
@@ -59,11 +59,7 @@ class cuisineIndex(View):
                cuisineList = cuisineList.values("id", "name", "avatar")
                return JsonResponse(list(cuisineList), safe=False)
        except Exception as e:
-           return JsonResponse({
-               'code': 500,
-               'msg': str(e),
-               'data': None
-           })
+           return JsonResponse({'msg': str(e)}) 
 
    def post(self, request):
        # 获取所有菜品属性
@@ -83,26 +79,25 @@ class cuisineIndex(View):
            )
        except Exception as e:
            print(f"Error: {e}")
-           return HttpResponse('所需数据缺少')
+           return JsonResponse({'msg': '所需数据缺少'})
        else:
            cuisine_obj.save()
-           return HttpResponse('菜品创建成功')
+           return JsonResponse({'id': cuisine_obj.id, 'msg': '菜品创建成功'})
 
    def put(self, request):
-       params_data = json.loads(request.body.decode('utf-8'))
-       
        try:
-           to_update_cuisine = Cuisine.objects.get(id=params_data['id'])
+           params_data = json.loads(request.body.decode('utf-8'))
+           cuisine_to_update = Cuisine.objects.get(id=params_data['id'])
            for param, value in params_data.items():
                if param == 'id' or value == None:
                    continue
-               to_update_cuisine.__dict__[param] = value
-               to_update_cuisine.save()
+               cuisine_to_update.__dict__[param] = value
+               cuisine_to_update.save()
        except Exception as e:
            print(f"Error: {e}")
-           return HttpResponse('所需数据缺少')
+           return JsonResponse({'msg': '所需数据缺少'})
        else:
-           return HttpResponse('菜品更改完成')
+           return JsonResponse({'msg': '菜品更改完成'})
 
    def delete(self, request):
        try:
@@ -110,6 +105,6 @@ class cuisineIndex(View):
            Cuisine.objects.filter(id__in=cuisine_id_list).delete()
        except Exception as e:
            print(f"Error: {e}")
-           return HttpResponse('菜品删除失败')
+           return JsonResponse({'msg': '菜品删除失败'})
        else:
-           return HttpResponse('菜品删除成功')
+           return JsonResponse({'msg': '菜品删除成功'})
