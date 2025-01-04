@@ -2,6 +2,8 @@
 
 声明：该文档参考自 https://www.byhy.net/py/django/doc_api_v1_2/
 
+<br><br>
+
 ## 概述
 
 ___
@@ -13,6 +15,8 @@ ___
 除了GET请求，所有的请求消息的消息体（如有），都是json格式。
 
 所有的响应消息的消息体，都是json格式。
+
+<br><br>
 
 ## 登录系统
 
@@ -67,6 +71,8 @@ http 响应消息 body 中， 数据以json格式存储，
     "error": "Login failed"
 }
 ```
+<br><br>
+
 
 ## 用户
 
@@ -101,6 +107,8 @@ http响应消息body中， 数据以json格式存储，
     "avatar": xxxxx
 }
 ```
+
+<br>
 
 ### 添加用户
 
@@ -163,6 +171,8 @@ http响应消息body中，数据以json格式存储，
 }
 ```
 
+<br>
+
 ### 修改用户信息
 
 ____
@@ -219,6 +229,8 @@ http响应消息body中，数据以json格式存储，
 }
 ```
 
+<br>
+
 ### 删除用户
 
 ____
@@ -268,6 +280,7 @@ http响应消息body中，数据以json格式存储，
     "msg": "删除用户失败"
 }
 ```
+<br><br>
 
 ## 菜品
 
@@ -344,6 +357,8 @@ http响应消息body中，数据以json格式存储，
 }
 ```
 
+<br>
+
 ### 添加一个菜品
 
 ____
@@ -398,6 +413,8 @@ http 响应消息 body 中， 数据以json格式存储，
     "msg": "所需字段缺少"
 }
 ```
+
+<br>
 
 ### 修改菜品信息
 
@@ -458,6 +475,8 @@ http 响应消息 body 中， 数据以json格式存储，
 }
 ```
 
+<br>
+
 ### 删除菜品信息
 
 ____
@@ -505,5 +524,161 @@ http 响应消息 body 中， 数据以json格式存储，
 ```
 {
     "msg": "菜品删除失败"
+}
+```
+
+<br><br>
+
+## 订单
+___
+
+### 列出订单
+___
+
+#### 请求消息
+```
+GET /order HTTP/1.1
+```
+
+#### 请求参数
+http 请求消息 url 中 需要携带如下参数，
+
+- user_openid
+必填项，用户的唯一标识
+
+#### 响应消息
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+#### 响应内容
+http响应消息 body 中， 数据以json格式存储，
+
+如果获取信息成功，返回如下
+```
+[
+    {
+        "id": xxxxx,
+        "time_created": "2024-12-14T11:28:52.490Z",
+        "cuisines": [
+            {
+                "name": xxxxx,
+                "avatar": xxxxx
+            }
+        ]
+    }
+]
+```
+数据结构是包含多个订单字典对象的列表
+
+其中
+
+每个订单对象包括
+
+`id` 订单ID
+
+`time_created` 订单创建时间
+
+`cuisines` 包含多个菜品字典对象的列表
+
+<br>
+
+### 创建订单
+___
+
+#### 请求消息
+```
+POST /cuisine HTTP/1.1
+Content-Type: application/json
+```
+<br>
+
+#### 请求参数
+http 请求消息 body 携带添加药品的信息
+
+消息体的格式是json，如下示例：
+```
+{
+    "status": "已完成",
+    "user_id": 1,
+    "cuisines": 
+    {
+        "id1": amount1,
+        "id2": amount2
+    }
+}
+```
+其中
+`status` 订单状态
+`user_openid` 用户唯一标识
+`cuisines` 包含多个键值对（菜品ID & 该菜品数量）的字典
+<br>
+
+#### 响应消息
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+<br>
+
+#### 响应内容
+http 响应消息 body 中， 数据以json格式存储，
+
+如果创建成功，返回如下
+```
+{
+    'msg': '订单创建成功'
+}
+```
+如果添加失败，返回失败的原因，示例如下
+```
+{
+    'msg': '订单创建失败'
+}
+```
+<br>
+
+### 删除订单
+___
+
+#### 请求消息
+```
+DELETE /cuisine HTTP/1.1
+Content-Type: application/json
+```
+<br>
+
+#### 请求参数
+http 请求消息 body 携带修改药品的信息
+
+消息体的格式是json，如下示例：
+```
+{
+    "order_id": xxxxx
+}
+```
+<br>
+
+#### 响应消息
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+<br>
+
+#### 响应内容
+http 响应消息 body 中， 数据以json格式存储，
+
+如果修改成功，返回如下
+```
+{
+    'msg': '订单删除成功'
+}
+```
+如果添加失败，返回失败的原因，示例如下
+```
+{
+    'msg': '订单删除失败'
 }
 ```

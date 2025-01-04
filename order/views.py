@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse, HttpResponse
 from order.models import Order, OrderCuisine 
@@ -14,23 +13,23 @@ class orderIndex(View):
     def get(self, request): 
         '''
         请求数据结构（参数放在url）:
-        {"user_id": int}
+        {"user_openid": int}
 
         返回数据结构:
         [
             {
-                "id": 24,
+                "id": xxxxx,
                 "time_created": "2024-12-14T11:28:52.490Z",
                 "cuisines": [
                     {
-                        "name": "小炒黄牛肉",
-                        "avatar": "/media/%E5%B0%8F%E7%82%92%E9%BB%84%E7%89%9B%E8%82%89.jpeg"
+                        "name": xxxxx,
+                        "avatar": xxxxx
                     },
                     ...
                 ]
             },
             {
-                "id": 25,
+                "id": xxxxx,
                 ...
             }
         ]
@@ -76,8 +75,9 @@ class orderIndex(View):
         请求数据结构（参数放在请求体）：
         {
             "status": "已完成",
-            "user_id": 1,
-            "cuisines": {
+            "user_openid": 1,
+            "cuisines": 
+            {
                 "id1": amount1,
                 "id2": amount2
             }
@@ -87,12 +87,12 @@ class orderIndex(View):
             # 除 GET 外的请求方法参数可以请求体获得，但先要把数据通过json.loads()解析成python对象
             data = json.loads(request.body)
             obj_order_status = 1 if data.get('status') == '已完成' else 2
-            obj_customer = data.get('user_id')
+            obj_customer = WeappUser.objects.create(openid = data.get('user_openid'))
             cuisine_dict = data.get('cuisines')
 
             order_obj = Order.objects.create(
                 status = obj_order_status,
-                customer_id = obj_customer # 外键字段名 + "_id"  或者 传入外键对象实例
+                customer = obj_customer # 外键字段名 + "_id"  或者 传入外键对象实例
                 )
             
             # 重新获取刚创建的订单（通过时间戳字段）
@@ -113,9 +113,9 @@ class orderIndex(View):
             # 因为使用 Model.objects.method() 时不需要显式调用 .save()
         except Exception as e:
             print(f"Error: {e}")
-            return HttpResponse('订单创建失败')
+            return JsonResponse({'msg': '订单创建失败'})
         else:
-            return HttpResponse('订单创建成功')
+            return JsonResponse({'msg': '订单创建成功'})
             
 
     # 处理 DELETE 请求
@@ -132,6 +132,6 @@ class orderIndex(View):
             Order.objects.filter(id=user_id).delete()
         except Exception as e:
             print(f"Error: {e}")
-            return HttpResponse('订单删除失败')
+            return JsonResponse({'msg': '订单删除失败'})
         else:
-            return HttpResponse('订单删除成功')
+            return JsonResponse({'msg': '订单删除成功'})
