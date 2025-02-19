@@ -1,7 +1,3 @@
-Here’s a draft for your README file:
-
----
-
 # Menu-System Backend
 
 This is the backend service for the **Menu-System** project, which supports online menu browsing, order creation, and historical order access for users.
