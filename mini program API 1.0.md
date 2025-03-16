@@ -2,7 +2,7 @@
 
 Statement: This document is referenced from https://www.byhy.net/py/django/doc_api_v1_2/
 
-<br><br>
+<br /><br />
 
 ## Overview
 
@@ -16,7 +16,7 @@ Except for GET requests, the message body of all requests (if any) is in JSON fo
 
 The message body of all response messages is in JSON format.
 
-<br><br>
+<br /><br />
 
 ## Login System
 
@@ -30,7 +30,6 @@ ____
 POST /profile/login HTTP/1.1
 COntent-Type: application/x-www-form-urlencoded
 ```
-
 
 ### Request Parameters
 
@@ -46,12 +45,10 @@ The following parameters need to be carried:
 
 ___
 
-
 ```
 HTTP/1.1 200 OK
 Content-Type: application/json
 ```
-
 
 ### Response Content
 
@@ -67,7 +64,6 @@ If the login is successful, the following is returned:
 }
 ```
 
-
 If the login fails, the following is returned:
 
 ```
@@ -75,8 +71,8 @@ If the login fails, the following is returned:
     "error": "Login failed"
 }
 ```
-<br><br>
 
+<br /><br />
 
 ## User
 
@@ -284,7 +280,8 @@ If the deletion fails, the reason for the failure is returned, as shown in the f
     "msg": "Failed to delete user"
 }
 ```
-<br><br>
+
+<br /><br />
 
 ## Dishes
 
@@ -531,36 +528,44 @@ If the deletion fails, the reason for the failure is returned, as shown in the f
 }
 ```
 
-<br><br>
+<br /><br />
 
 ## Order
+
 ___
 
 ### List Orders
+
 ___
 
 #### Request Message
+
 ```
 GET /order HTTP/1.1
 ```
 
 #### 请求参数
+
 #### Request Parameters
+
 The http request message url needs to carry the following parameters:
 
 - user_openid
-Required, the unique identifier of the user.
+  Required, the unique identifier of the user.
 
 #### Response Message
+
 ```
 HTTP/1.1 200 OK
 Content-Type: application/json
 ```
 
 #### Response Content
+
 In the http response message body, the data is stored in JSON format.
 
 If the information is successfully obtained, the following is returned:
+
 ```
 [
     {
@@ -575,6 +580,7 @@ If the information is successfully obtained, the following is returned:
     }
 ]
 ```
+
 The data structure is a list containing multiple order dictionary objects.
 
 Where
@@ -590,19 +596,24 @@ Each order object includes:
 <br>
 
 ### Create Order
+
 ___
 
 #### Request Message
+
 ```
 POST /cuisine HTTP/1.1
 Content-Type: application/json
 ```
+
 <br>
 
 #### Request Parameters
+
 The http request message body carries the information of the order to be added.
 
 The message body is in JSON format, as shown in the following example:
+
 ```
 {
     "status": "Completed",
@@ -614,74 +625,94 @@ The message body is in JSON format, as shown in the following example:
     }
 }
 ```
+
 Where
 `status` Order status
 `user_openid` User unique identifier
 `cuisines` A dictionary containing multiple key-value pairs (dish ID & quantity of the dish)
-<br>
+<br />
 
 #### Response Message
+
 ```
 HTTP/1.1 200 OK
 Content-Type: application/json
 ```
+
 <br>
 
 #### Response Content
+
 In the http response message body, the data is stored in JSON format.
 
 If the creation is successful, the following is returned:
+
 ```
 {
     'msg': 'Order created successfully'
 }
 ```
+
 If the addition fails, the reason for the failure is returned, as shown in the following example:
+
 ```
 {
     'msg': 'Failed to create order'
 }
 ```
+
 <br>
 
 ### Delete Order
+
 ___
 
 #### Request Message
+
 ```
 DELETE /cuisine HTTP/1.1
 Content-Type: application/json
 ```
+
 <br>
 
 #### Request Parameters
+
 The http request message body carries the information of the order to be deleted.
 
 The message body is in JSON format, as shown in the following example:
+
 ```
 {
     "order_id": xxxxx
 }
 ```
+
 <br>
 
 #### Response Message
+
 ```
 HTTP/1.1 200 OK
 Content-Type: application/json
 ```
+
 <br>
 
 #### Response Content
+
 In the http response message body, the data is stored in JSON format.
 
 If the deletion is successful, the following is returned:
+
 ```
 {
     'msg': 'Order deleted successfully'
 }
 ```
+
 If the deletion fails, the reason for the failure is returned, as shown in the following example:
+
 ```
 {
     'msg': 'Failed to delete order'
